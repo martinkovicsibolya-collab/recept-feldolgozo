@@ -132,6 +132,24 @@
   </button>
 
   <div class="card" id="result">
+  <div class="card">
+
+  <h2>ChatGPT válasza</h2>
+
+  <p class="info">
+    Másold ide a ChatGPT teljes válaszát.
+  </p>
+
+  <textarea
+    id="chatgptResponse"
+    placeholder="Ide másold be a ChatGPT válaszát...">
+  </textarea>
+
+  <button class="copy" onclick="saveChatGPTResponse()">
+    💾 TXT MENTÉSE
+  </button>
+
+</div>  
 
     <h2>Kész feldolgozási csomag</h2>
 
@@ -550,7 +568,35 @@ Ne használj felesleges magyarázatokat.
 
   // Az első receptablak automatikus létrehozása
   addRecipe();
+function saveChatGPTResponse() {
 
+  const text = document.getElementById("chatgptResponse").value;
+
+  if (!text.trim()) {
+    alert("Először másold be a ChatGPT válaszát.");
+    return;
+  }
+
+  const blob = new Blob(
+    [text],
+    { type: "text/plain;charset=utf-8" }
+  );
+
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "bevásárlólista.txt";
+
+  document.body.appendChild(link);
+
+  link.click();
+
+  document.body.removeChild(link);
+
+  URL.revokeObjectURL(url);
+}
 </script>
 
 </body>

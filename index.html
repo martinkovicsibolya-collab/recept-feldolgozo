@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recept feldolgozó</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      color: #222;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 220px;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      resize: vertical;
+      font-size: 16px;
+      font-family: inherit;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 12px 18px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    .add {
+      background: #222;
+      color: white;
+    }
+
+    .finish {
+      background: #1769aa;
+      color: white;
+      width: 100%;
+      font-size: 18px;
+      margin-top: 20px;
+    }
+
+    .copy {
+      background: #2e7d32;
+      color: white;
+    }
+
+    .recipe {
+      border-top: 1px solid #ddd;
+      padding-top: 20px;
+      margin-top: 20px;
+    }
+
+    .recipe-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .delete {
+      background: #c62828;
+      color: white;
+      margin-top: 0;
+    }
+
+    #result {
+      display: none;
+    }
+
+    #promptOutput {
+      min-height: 300px;
+    }
+
+    .info {
+      color: #666;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>Recept feldolgozó</h1>
+
+  <div class="card">
+
+    <p class="info">
+      Illeszd be az első receptet az alábbi mezőbe.
+    </p>
+
+    <div id="recipes"></div>
+
+    <button class="add" onclick="addRecipe()">
+      + Recept hozzáadása
+    </button>
+
+  </div>
+
+  <button class="finish" onclick="finishRecipes()">
+    BEFEJEZTEM – KÉSZ LISTÁT KÉREK
+  </button>
+
+  <div class="card" id="result">
+
+    <h2>Kész feldolgozási csomag</h2>
+
+    <textarea id="promptOutput" readonly></textarea>
+
+    <button class="copy" onclick="copyPrompt()">
+      📋 KÉSZ CSOMAG MÁSOLÁSA
+    </button>
+
+    <button class="finish" onclick="openChatGPT()">
+      🤖 ÁTADÁS A CHATGPT-NEK
+    </button>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  let recipeCount = 0;
+
+
+  function addRecipe() {
+
+    recipeCount++;
+
+    const recipes = document.getElementById("recipes");
+
+    const recipe = document.createElement("div");
+
+    recipe.className = "recipe";
+
+    recipe.id = "recipe-" + recipeCount;
+
+    recipe.innerHTML = `
+      <div class="recipe-header">
+        <h3>Recept ${recipeCount}</h3>
+
+        <button
+          class="delete"
+          onclick="deleteRecipe(${recipeCount})">
+          Törlés
+        </button>
+      </div>
+
+      <textarea
+        id="recipe-text-${recipeCount}"
+        placeholder="Ide illeszd be a receptet...">
+      </textarea>
+    `;
+
+    recipes.appendChild(recipe);
+
+    recipe.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+
+    document
+      .getElementById("recipe-text-" + recipeCount)
+      .focus();
+  }
+
+
+  function deleteRecipe(id) {
+
+    const recipe = document.getElementById("recipe-" + id);
+
+    if (recipe) {
+      recipe.remove();
+    }
+  }
+
+
+  function finishRecipes() {
+
+    const textareas =
+      document.querySelectorAll("#recipes textarea");
+
+    let output = "";
+
+    let number = 0;
+
+    textareas.forEach(function(textarea) {
+
+      const text = textarea.value.trim();
+
+      if (text !== "") {
+
+        number++;
+
+        output +=
+          "\n\n==============================\n" +
+          "RECEPT " + number + "\n" +
+          "==============================\n\n" +
+          text;
+      }
+
+    });
+
+
+    if (number === 0) {
+
+      alert("Adj hozzá legalább egy receptet!");
+
+      return;
+    }
+
+
+    const processingInstruction = `
+
+==============================
+FELDOLGOZÁSI FELADAT
+==============================
+
+Dolgozd fel az alábbi recepteket a megadott utasítások szerint.
+
+Minden receptet külön kezelj.
+
+Az eredeti recept szövegét ne hagyd ki.
+
+A végső választ áttekinthető, jól másolható formában készítsd el.
+
+`;
+
+    const completePrompt =
+      processingInstruction + output;
+
+
+    document.getElementById("promptOutput").value =
+      completePrompt;
+
+    document.getElementById("result").style.display =
+      "block";
+
+    document.getElementById("result").scrollIntoView({
+      behavior: "smooth"
+    });
+  }
+
+
+  async function copyPrompt() {
+
+    const text =
+      document.getElementById("promptOutput").value;
+
+    try {
+
+      await navigator.clipboard.writeText(text);
+
+      alert("A kész feldolgozási csomag a vágólapra került.");
+
+    } catch (error) {
+
+      alert(
+        "A másolás nem sikerült. Jelöld ki és másold ki kézzel."
+      );
+    }
+  }
+
+
+  function openChatGPT() {
+
+    const text =
+      document.getElementById("promptOutput").value;
+
+    if (!text.trim()) {
+
+      alert("Először készítsd el a feldolgozási csomagot.");
+
+      return;
+    }
+
+    navigator.clipboard.writeText(text)
+      .then(function() {
+
+        window.open(
+          "https://chatgpt.com/",
+          "_blank"
+        );
+
+        alert(
+          "A feldolgozási csomag a vágólapra került. " +
+          "A ChatGPT-ben illeszd be az üzenetmezőbe."
+        );
+
+      })
+      .catch(function() {
+
+        window.open(
+          "https://chatgpt.com/",
+          "_blank"
+        );
+
+      });
+  }
+
+
+  // Az első receptablak automatikus létrehozása
+  addRecipe();
+
+</script>
+
+</body>
+</html>

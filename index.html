@@ -245,16 +245,143 @@
     const processingInstruction = `
 
 ==============================
-FELDOLGOZÁSI FELADAT
+RECEPTFELDOLGOZÁSI UTASÍTÁS
 ==============================
 
-Dolgozd fel az alábbi recepteket a megadott utasítások szerint.
+Az alábbi szövegben egy vagy több recept található.
 
-Minden receptet külön kezelj.
+A recepteket automatikusan dolgozd fel az alábbi szabályok szerint.
 
-Az eredeti recept szövegét ne hagyd ki.
+1. NYELVFELISMERÉS
+------------------------------
+Automatikusan ismerd fel minden recept eredeti nyelvét.
+A feldolgozás eredménye minden esetben magyar nyelvű legyen.
 
-A végső választ áttekinthető, jól másolható formában készítsd el.
+2. HOZZÁVALÓK FORDÍTÁSA
+------------------------------
+A hozzávalók megnevezését fordítsd magyar nyelvre.
+
+A magyar megnevezés legyen természetes és a főzésben használatos.
+
+3. MÉRTÉKEGYSÉGEK
+------------------------------
+A nem metrikus mértékegységeket alakítsd át metrikus
+mértékegységekre.
+
+Elsődlegesen használd:
+- gramm (g)
+- kilogramm (kg)
+- milliliter (ml)
+- liter (l)
+- darab (db)
+
+A mennyiségeket ésszerűen kerekítsd, ha szükséges.
+
+4. HOZZÁVALÓK ÖSSZEVONÁSA
+------------------------------
+Az összes recept hozzávalóit a bevásárlólista elkészítésekor
+vond össze, ha ugyanarról az alapanyagról van szó.
+
+Az azonos alapanyag különböző receptben szereplő mennyiségeit
+add össze.
+
+FONTOS:
+
+Ne vond össze azokat az alapanyagokat, amelyeknél a termék
+vagy a feldolgozási mód lényeges különbséget jelent.
+
+Példa:
+
+Ha az egyik receptben szerepel:
+- 1 egész csirke
+
+és egy másik receptben:
+- 2 csirkecomb
+
+akkor ezek maradjanak külön:
+
+- Egész csirke – 1 db
+- Csirkecomb – 2 db
+
+Ne alakítsd át őket egyetlen összesített csirketétellé.
+
+Hasonló módon kezeld külön például a következőket, ha a
+feldolgozási mód vagy a termék típusa eltér:
+- egész csirke / csirkecomb
+- darált hús / szeletelt hús
+- friss paradicsom / paradicsomszósz
+- egész burgonya / burgonyapüré
+- reszelt sajt / szeletelt sajt
+
+5. BEVÁSÁRLÓLISTA
+------------------------------
+A feldolgozás végén készíts egyetlen közös bevásárlólistát
+az összes recept alapján.
+
+A bevásárlólistát az alábbi kategóriákba rendezd:
+
+HÚS, HAL
+
+ZÖLDSÉG, GYÜMÖLCS
+
+TEJTERMÉK, TOJÁS
+
+SZÁRAZÁRU, GABONAFÉLÉK
+
+FŰSZEREK
+
+OLAJOK, SZÓSZOK
+
+KONZERV, ÜVEGES TERMÉKEK
+
+EGYÉB
+
+Minden hozzávaló csak abban a kategóriában szerepeljen,
+ahová természetesen tartozik.
+
+6. MENNYISÉGEK
+------------------------------
+Ha ugyanaz az alapanyag több receptben is szerepel,
+a mennyiségeket vond össze.
+
+Például:
+
+Recept 1:
+100 g vaj
+
+Recept 2:
+150 g vaj
+
+A bevásárlólistán:
+
+Vaj – 250 g
+
+Ha az összesítés nem végezhető el egyértelműen,
+ne találj ki mennyiséget.
+
+7. RECEPTENKÉNTI FELDOLGOZÁS
+------------------------------
+A bevásárlólista előtt röviden és áttekinthetően jelenítsd
+meg a feldolgozott recepteket is.
+
+Minden receptnél szerepeljen:
+
+- recept neve
+- hozzávalók magyarul
+- átváltott metrikus mennyiségek
+
+8. VÉGSŐ BEVÁSÁRLÓLISTA
+------------------------------
+A válasz végén szerepeljen:
+
+BEVÁSÁRLÓLISTA
+
+majd a kategóriák és az összesített hozzávalók.
+
+A lista legyen egyszerűen másolható és TXT fájlban is
+jól olvasható.
+
+Ne használj felesleges magyarázatokat.
 
 `;
 
